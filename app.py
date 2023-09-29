@@ -1,10 +1,8 @@
 import os
-from dotenv import load_dotenv
-
 from langchain import PromptTemplate
 from langchain.agents import initialize_agent, Tool
 from langchain.agents import AgentType
-from langchain.chat_models import ChatOpenAI
+from langchain.chat_models import ChatOpenAI, OpenAIApi
 from langchain.prompts import MessagesPlaceholder
 from langchain.memory import ConversationSummaryBufferMemory
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -18,9 +16,13 @@ import json
 from langchain.schema import SystemMessage
 import streamlit as st
 
-load_dotenv()
-brwoserless_api_key = os.getenv("BROWSERLESS_API_KEY")
-serper_api_key = os.getenv("SERP_API_KEY")
+
+browserless_api_key = st.secrets["BROWSERLESS_API_KEY"]
+serper_api_key = st.secrets["SERPER_API_KEY"]
+
+openai_api_key = st.secrets["OPENAI_API_KEY"]
+OpenAIApi.set_api_key(openai_api_key)
+
 
 # 1. Tool for search
 
@@ -38,8 +40,6 @@ def search(query):
     }
 
     response = requests.request("POST", url, headers=headers, data=payload)
-
-    print(response.text)
 
     return response.text
 
@@ -65,14 +65,13 @@ def scrape_website(objective: str, url: str):
     data_json = json.dumps(data)
 
     # Send the POST request
-    post_url = f"https://chrome.browserless.io/content?token={brwoserless_api_key}"
+    post_url = f"https://chrome.browserless.io/content?token={browserless_api_key}"
     response = requests.post(post_url, headers=headers, data=data_json)
 
     # Check the response status code
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, "html.parser")
         text = soup.get_text()
-        print("CONTENTTTTTT:", text)
 
         if len(text) > 10000:
             output = summary(objective, text)
@@ -173,13 +172,13 @@ agent = initialize_agent(
 
 # Use streamlit to create a web app
 def main():
-    st.set_page_config(page_title="AI research agent", page_icon=":bird:")
+    st.set_page_config(page_title="KI Forschung", page_icon=":bird:")
 
-    st.header("AI research agent :bird:")
+    st.header("KI Forschung :bird:")
     query = st.text_input("Research goal")
 
     if query:
-        st.write("Doing research for ", query)
+        st.write("Ich suche nach: ", query)
 
         result = agent({"input": query})
 
