@@ -1,6 +1,6 @@
+pip
 streamlit
 langchain
 bs4
 requests
-json
 pydantic
