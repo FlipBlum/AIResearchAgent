@@ -165,6 +165,7 @@ agent = initialize_agent(
     verbose=True,
     agent_kwargs=agent_kwargs,
     memory=memory,
+    langauge="de",
 )
 
 
