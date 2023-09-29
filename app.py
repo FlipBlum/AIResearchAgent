@@ -2,7 +2,7 @@ import os
 from langchain import PromptTemplate
 from langchain.agents import initialize_agent, Tool
 from langchain.agents import AgentType
-from langchain.chat_models import ChatOpenAI, OpenAIApi
+from langchain.chat_models import ChatOpenAI
 from langchain.prompts import MessagesPlaceholder
 from langchain.memory import ConversationSummaryBufferMemory
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -19,9 +19,7 @@ import streamlit as st
 
 browserless_api_key = st.secrets["BROWSERLESS_API_KEY"]
 serper_api_key = st.secrets["SERPER_API_KEY"]
-
 openai_api_key = st.secrets["OPENAI_API_KEY"]
-OpenAIApi.set_api_key(openai_api_key)
 
 
 # 1. Tool for search
